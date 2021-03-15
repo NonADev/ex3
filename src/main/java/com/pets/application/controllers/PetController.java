@@ -3,20 +3,30 @@ package com.pets.application.controllers;
 import com.google.gson.Gson;
 import com.pets.domain.models.Pet;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @CrossOrigin
 @RestController
 @RequestMapping
 public class PetController {
-    @CrossOrigin
+    static ArrayList<Pet> petList = new ArrayList<>();
+
     @GetMapping("/pets")
     public ResponseEntity<Object> pets() {
         try {
-            return ResponseEntity.ok("toto<br>richard<br>mateus");
+            return ResponseEntity.ok(petList);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @PostMapping("/pets")
+    public ResponseEntity<Object> insertPet(@RequestBody Pet newPet) {
+        try {
+            petList.add(newPet);
+            return ResponseEntity.ok(petList.get(petList.size()-1));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
@@ -26,7 +36,7 @@ public class PetController {
     public ResponseEntity<Object> lista() {
         try {
             Pet[] p = new Pet[3];
-            for(int i = 0; i<3;i++){
+            for (int i = 0; i < 3; i++) {
                 p[i] = new Pet();
             }
             p[0].nome = "toto";
